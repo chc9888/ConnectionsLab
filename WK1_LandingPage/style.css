@@ -1,0 +1,209 @@
+body {
+    padding: 10px;
+    text-align: center;
+    border-radius: 30px;
+    color: #8b69f4;
+    background-color: #0d1431;
+}
+
+.pirata-one-regular {
+    font-family: "Pirata One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.quintessential-regular {
+    font-family: "Quintessential", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+h1 {
+    font-family: "Pirata One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 5rem;
+    margin: 0;
+    align-content: center;
+}
+
+h2 {
+    font-family: "Pirata One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 3rem;
+    margin: auto;
+    color: #e2bdfc;
+    padding: 5px;
+}
+
+h3 {
+    font-family: "Pirata One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 2rem;
+    margin: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+}
+
+h4 {
+    font-family: "Pirata One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.5rem;
+    margin: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+}
+
+.styled_button {
+    background-color: #e2bdfc;
+    color: #0d1431;
+    border-radius: .5em;
+    font-family: "Pirata One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.3rem;
+
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.styled_button:hover {
+    color: #e2bdfc;
+    border: 1px solid #e2bdfc;
+    background-color: #0d1431;
+}
+
+img {
+    padding: 10px;
+    width: 30%;
+    height: auto;
+}
+
+.button_section {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.scientist_section {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scientistInfo_section {
+    width: 80%;
+    border: 3px solid #bdf9c4;
+    border-radius: 1em;
+    text-align: justify;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.trendingTopics_section {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.topics_section {
+    width: 80%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+}
+
+.topicsInfo_section {
+    width: 100%;
+    border: 3px solid #bdf9c4;
+    border-radius: 1em;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.text_box {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+p {
+    text-align: justify;
+    color: #ebfdfe;
+    margin: 0;
+}
+
+a {
+    padding-top: 5px;
+    color: #ebfdfe;
+}
+
+footer {
+    width: 100%;
+    padding: 10px;
+    color: #bdf9c4;
+    font-size: small;
+}
+
+.thunder_media {
+    width: 20%;
+}
+
+#thunder {
+    padding: 0%;
+    width: 50%;
+    animation-name: move;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes move {
+    0%{
+        transform: scale(0%);
+    }
+
+    20%{
+        transform: scale(0%);
+    }
+
+    25%{
+        transform: scale(100%);
+    }
+
+    30%{
+        transform: scale(100%);
+    }
+
+    35% {
+        transform: scale(0%);
+    }
+
+    100% {
+        transform: scale(0%);
+    }
+}
