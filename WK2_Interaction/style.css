@@ -1,0 +1,61 @@
+body {
+    background-color: black;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    width: 60vw;
+    height: 100vh;
+
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 300;
+    font-size: 200%;
+    margin: 10px;
+}
+
+h2 {
+    font-family: "Alegreya", serif;
+    font-weight: 100;
+    margin: 10px;
+}
+
+.search_bar {
+    width: 70%;
+    height: 30px;
+    margin: 10px;
+}
+
+.styled_button {
+    margin: 10px;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    cursor: pointer;
+
+    font-family: "Courier Prime", monospace;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.styled_button:hover {
+    color: red;
+    border-color: red;
+}
