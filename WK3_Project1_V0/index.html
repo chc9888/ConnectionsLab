@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Style sheet-->
+    <link href="style.css" rel="stylesheet">
+    <!--Favicon-->
+
+    <!--Title-->
+    <title>México travel guide</title>
+</head>
+<body>
+    <!--Header-->
+    <header>
+        <h1>México travel guide</h1>
+    </header>
+    <section class="content_section">
+        <!--State selection-->
+        <section class="selection_section">
+            <form>
+                <label fr="states">Choose a state:</label>
+                <select name="states" id="states">
+                    <option value="Mexico City">México city</option>
+                    <option value="Queretaro">Querétaro</option>
+                    <option value="Veracruz">Veracruz</option>
+                    <option value="Oaxaca">Oaxaca</option>
+                    <option value="Guanajuato">Guanajuato</option>
+                </select>
+            </form>
+        </section>
+        <section class="stateInfo_section">
+            <div class="left_div">
+                <!--Relevant info-->
+                <div class="relevantInfo_div">
+                    <h2>Relevant info</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec justo purus, tempor sed mollis vitae, tempor sed metus. Vivamus ac mi ipsum. Etiam pretium sapien sapien, at mattis risus consequat ac. Aliquam pretium aliquam diam. Integer sagittis arcu consequat, maximus odio non, eleifend risus. Nunc mattis ex at libero aliquet fermentum. Nam mollis placerat velit id convallis. Nam vel orci convallis, aliquam nulla eu, mollis elit.
+                    </p>
+                </div>
+                <!--Map-->
+                <div class="map_div">
+                    <h2>Map location</h2>
+                    <iframe src="https://www.google.com/maps/embed?pb=..." width="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+            <!--Places-->
+            <div class="center_div">
+                <h2>Places you should go</h2>
+                <div class="places_div">
+                    <button type="button">Place 1</button>
+                    <button type="button">Place 2</button>
+                    <button type="button">Place 3</button>
+                </div>
+                <!--Place img-->
+                <img class="dish_img" src="https://picsum.photos/200" alt="placeholder"/>
+            </div>
+            <!--Dishes-->
+            <div class="right_div">
+                <h2>Dishes you should try</h2>
+                <div class="dishes_div">
+                    <button type="button">Dish 1</button>
+                    <button type="button">Dish 2</button>
+                    <button type="button">Dish 3</button>
+                </div>
+                <!--Dish img-->
+                <img class="dish_img" src="https://picsum.photos/200" alt="placeholder"/>
+            </div>
+        </section>
+    </section>
+    <!--Footer-->
+    <footer>
+        
+    </footer>
+    <!--Script-->
+    <script src="app.js"></script>
+</body>
+</html>
