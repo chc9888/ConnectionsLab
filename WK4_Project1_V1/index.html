@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Style sheet-->
+    <link href="style.css" rel="stylesheet">
+    <!--Favicon-->
+
+    <!--Title-->
+    <title>México travel guide</title>
+</head>
+<body>
+    <!--Header-->
+    <header>
+        <h1>México travel guide</h1>
+    </header>
+    <section class="content_section">
+        <!--State selection-->
+        <section class="selection_section">
+            <form>
+                <select name="states" id="states" onchange="handleStateChange(this.value)">
+                    <option value="">-- Select a state --</option>
+                    <!-- Options will be loaded dynamically from JSON -->
+                </select>
+            </form>
+        </section>
+        
+        <!-- Dynamic content area -->
+        <section id="state-content" class="stateInfo_section" style="display: none;">
+             <!--Left div-->
+            <div class="left_div">
+                <!--Relevant info-->
+                <div class="relevantInfo_div">
+                    <h2>Relevant info</h2>
+                    <p id="state-description">
+                        <!-- Description will be loaded dynamically -->
+                    </p>
+                </div>
+                <!--Map-->
+                <div class="map_div">
+                    <h2>Map location</h2>
+                    <div id="map-container">
+                        <!-- Map will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+            <!--Places-->
+            <div class="center_div">
+                <h2>Places you should go</h2>
+                <div id="places-container" class="places_div">
+                    <!-- Places buttons will be loaded dynamically -->
+                </div>
+                <!--Place img & description-->
+                <div id="place-display" class="imageDisplay_div">
+                    <!--Place img loaded dynamically-->
+                    <img id="place-img" src="" alt=""/>
+                    <!--Place name & info-->
+                    <div class="placesInfo_div">
+                        <!--Place info loaded dynamically-->
+                        <h3 id="place-title"></h3>
+                        <p id="place-desc"></p>
+                    </div>
+                </div>
+            </div>
+            <!--Dishes-->
+            <div class="right_div">
+                <h2>Dishes you should try</h2>
+                <div id="dishes-container" class="dishes_div">
+                    <!-- Dishes buttons will be loaded dynamically -->
+                </div>
+                <!--Dish img & description-->
+                <div id="dish-display" class="imageDisplay_div">
+                    <!--Place img loaded dynamically-->
+                    <img id="dish-img" class="dish_img" src="" alt=""/>
+                    <!--Dish name & info-->
+                    <div class = "dishesInfo_div">
+                        <!--Dish info loaded dynamically-->
+                        <h3 id="dish-title"></h3>
+                        <p id="dish-desc"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+    <!--Footer-->
+    <footer>
+    </footer>
+    <!--Script-->
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+header{
+    text-align: center;
+}
+
+h2, h3{
+    text-align: center;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    margin-block-start: 1em;
+}
+
+.content_section{
+    display: flex;
+    flex-direction: column;
+}
+
+.selection_section{
+    display: flex;
+    justify-content: center;
+}
+
+.stateInfo_section{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.left_div{
+    display: flex;
+    flex-direction: column;
+    width: 33%;
+    padding: 10px;
+}
+
+.map_div{
+    display: flex;
+    flex-direction: column;
+}
+
+.center_div{
+    display: flex;
+    flex-direction: column;
+    width: 33%;
+    justify-content: flex-start;
+    padding: 10px;
+}
+
+.places_div{
+    display: flex;
+    flex-direction: column;
+}
+
+.right_div{
+    display: flex;
+    flex-direction: column;
+    width: 33%;
+    justify-content: flex-start;
+    padding: 10px;
+}
+
+.dishes_div{
+    display: flex;
+    flex-direction: column;
+}
+
+.imageDisplay_div{
+    /* the type of display is stablished in the app.js*/
+    flex-direction: column;
+}
+
+button{
+   margin: 5px; 
+}
+
+footer{
+    text-align: center;
+}

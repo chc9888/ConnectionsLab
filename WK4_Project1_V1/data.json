@@ -1,0 +1,137 @@
+{
+  "mexicocity": {
+    "name": "México City",
+    "info": "Mexico City sits 2,240 meters (1.39 miles) above sea level. It’s the smallest state in the country but the second most populated, with over 9 million people. The city was built on a lake and actually sinks about 10 cm (3.9 in) every year. It was originally the capital of the Mexica Empire, and today it has more museums than any other city in the world. The subway system is the biggest in Latin America, has 12 lines and 195 stations, and it has cars reserved just for women, children and eldery people. I was born and lived here until I was 18, in the same neighborhood where Frida Kahlo and Diego Rivera once lived. Oh, and almost every September we get earthquakes so don’t come in september LOL. If you want museum recommendations, just ask me because there’s no way I could squeeze them all in here.",
+    "mapEmbedUrl": "//umap.openstreetmap.fr/en/map/mexico-city_1291063?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=false&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=none&captionBar=false&captionMenus=true&homeControl=false",
+    "places": [
+      {
+        "id": "bellasArtes",
+        "name": "Palace of Bellas Artes",
+        "description": "The Palace of Bellas Artes opened in 1934 after more than 30 years of construction and it is one of the most iconic cultural spots in Mexico City. It has various concert halls and two museums. My favorite part is the main hall, where the glass curtain made by Tiffany & Co. in 1911 weighs 22 tons and takes three minutes to go up. On the ceiling there is a stained glass window of Apollo surrounded by the muses of arts. The building also has murals by Mexican muralism legends like Diego Rivera and David Siqueiros that tell stories about the country’s identity and history.",
+        "image": "images/mexicoCity/bellasArtes.jpg"
+      },
+      {
+        "id": "chapultepec",
+        "name": "Chapultepec Forest",
+        "description": "Chapultepec Forest is the fourth largest urban park in the world, with 8.66 km² divided into four sections, which makes it almost five times bigger than Central Park. Today it is home to 12 museums, including Chapultepec Castle, one of only two royal palaces in North America that were actually lived in by monarchs. Emperor Maximilian lived here in the 19th century and later several Mexican presidents did as well. The castle sits on top of a hill, so the 20 to 30 minute climb can feel like a challenge (think of the Met Cloisters but steeper). People also say that the third section of the park is haunted.",
+        "image": "images/mexicoCity/chapultepec.png"
+      },
+      {
+        "id": "xochimilco",
+        "name": "Xochimilco",
+        "description": "Xochimilco is famous for its canals and colorful trajineras, the flat-bottomed boats you can float around on while listening to music and enjoying food. It is a UNESCO World Heritage site that keeps alive the ancient Aztec tradition of chinampas, or floating gardens. One of the most intriguing spots here is the “Island of the Dolls,” a spooky place full of hanging dolls. The story goes that a man named Julián Santana Barrera started collecting dolls to appease the spirit of a young girl who drowned nearby. Over the years, he hung hundreds of dolls all over the island, and locals say their eyes follow visitors around. Lady Gaga filmed her most recent video “The Dead Dance” here.",
+        "image": "images/mexicoCity/xochimilco.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "id": "tacos-de-suadero",
+        "name": "Tacos de suadero",
+        "description": "Suadero tacos are one of my favorite foods in Mexico City, and they are pretty hard to find in other states. Suadero is a thin cut of beef from between the skin and the meat of the cow, cooked slowly on a flat griddle until it’s tender and slightly crispy. Served on soft corn tortillas with fresh cilantro, chopped onions, and a squeeze of lime, they are simple but packed with flavor. Add a little salsa, and it’s taco perfection. Street carts and small taquerías all over the city serve them, making them a true Mexico City specialty.",
+        "image": "images/mexicoCity/suadero.jpg"
+      },
+      {
+        "id": "pambazos",
+        "name": "Pambazos",
+        "description": "Pambazos stuffed with potato and chorizo are a classic Mexico City treat that you really can’t miss. The bread is dipped in a red guajillo chili sauce, giving it a slightly spicy, rich flavor, and then toasted on a griddle until warm and slightly crispy. Inside, soft mashed potatoes mix with flavorful, spicy chorizo, making every bite comforting and satisfying. They’re usually topped with shredded lettuce, fresh cheese, crema, and a little salsa for an extra kick.",
+        "image": "images/mexicoCity/pambazo.jpg"
+      },
+      {
+        "id": "elotes",
+        "name": "Elotes preparados",
+        "description": "Elotes preparados are one of the best street foods in Mexico City, and cacahuazintle elotes are a true local favorite. This special variety of corn has big, soft kernels that soak up all the toppings perfectly. The corn is usually boiled or grilled and then slathered with mayo, crema, cheese, chili powder, lime, and sometimes a little hot sauce. Every bite is creamy, spicy, tangy, and completely addictive. You can find them at street stalls all over México but cacahuazintle elotes are exclusive from Mexico city.",
+        "image": "images/mexicoCity/elote.jpeg"
+      }
+    ]
+  },
+  "queretaro": {
+    "name": "Querétaro",
+    "info": "Querétaro is a city full of history. This is where Mexico’s independence began and important treaties were signed, including one where half of Mexican territory was lost to the United States. Maximilian, the last emperor of New Spain, was also executed here. The historic center was declared a World Heritage Site in 1996 and the city even served as the country’s capital twice. Querétaro is the most visited non-beach tourist destination in Mexico and hosts one of the largest livestock fairs in the country every November. The fair lasts two weeks and features concerts, food, and all kinds of fun events. I have been living here since 2014.",
+    "mapEmbedUrl": "//umap.openstreetmap.fr/en/map/queretaro_1291076?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=false&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=none&captionBar=false&captionMenus=false&homeControl=false",
+    "places": [
+      {
+        "id": "Peña",
+        "name": "Peña de Bernal",
+        "description": "Bernal boulder is one of the largest monoliths in the world, standing over 2,500 meters tall. It is perfect for walking, climbing, or paragliding, and at the top there is a natural viewpoint with stunning views of the valley and the town. Along the way, you can enjoy unique landscapes and feel the energy of the place, which some people describe as special. People also say that UFOs have been spotted around the area, so you can find a lot of alien related stuff around here. At the base of the Peña, there are restaurants and bars where you can try local food.",
+        "image": "images/queretaro/pena.jpeg"
+      },
+      {
+        "id": "Puente",
+        "name": "Puente de Dios",
+        "description": "The Bridge of God is one of those places that leaves you speechless. It is a natural rock arch over a crystal-clear river, surrounded by waterfalls and otherworldly vegetation. You can swim, walk along trails, and explore small caves, and the light that shines through the arch makes the water look magical, perfect for photos. I am always amazed at how peaceful it feels, as if time stops. It is ideal for a day of adventure, disconnecting, and enjoying nature.",
+        "image": "images/queretaro/puente.jpg"
+      },
+      {
+        "id": "arcos",
+        "name": "Los Arcos",
+        "description": "The Aqueduct of Querétaro is one of the city’s most iconic landmarks. Built in the 18th century, it stretches over 1,200 meters with 74 arches and was originally constructed to bring water from nearby springs to the city. Its impressive architecture and scale make it a must-see, especially when lit up at night. Walking or driving along its length gives you a real sense of the engineering skill of the time. The aqueduct is not just a functional structure but also a symbol of Querétaro’s history and beauty, and it remains one of the most photographed spots in the city.",
+        "image": "images/queretaro/arcos.png"
+      }
+    ],
+    "dishes": [
+      {
+        "id": "enchiladas-queretanas",
+        "name": "Enchiladas Queretanas",
+        "description": "Enchiladas queretanas are a delicious specialty from Querétaro that you really have to try. They are made with soft corn tortillas filled with chicken or cheese, then smothered in a rich, slightly sweet red sauce made from local chiles and spices. On top, they usually add chopped potatoes and carrots, along with fresh cheese and sour cream.",
+        "image": "images/queretaro/enchiladas.jpg"
+      },
+      {
+        "id": "barbacoa",
+        "name": "Barbacoa",
+        "description": "Barbacoa from Querétaro is a must-try for anyone visiting the region. Traditionally made with lamb or beef slowly cooked in an underground pit, the meat becomes tender, juicy, and full of smoky flavor. It is usually served with warm tortillas, fresh salsa, and sometimes a bit of onion and cilantro. To wash it down, nothing beats a glass of pulque, a traditional fermented drink made from the sap of the agave plant. If you visit in September, you can enjoy both at the Boyé Fair, which lasts two weeks and features food, concerts, and all kinds of fun events celebrating local culture.",
+        "image": "images/queretaro/barbacoa.jpg"
+      },
+      {
+        "id": "pedos",
+        "name": "Pedos de monja",
+        "description": "Pedos de monja are a sweet treat you have to try in Querétaro. These little pastries are soft, fluffy, and coated in sugar, kind of like a light donut or puff pastry. They are perfect with coffee or hot chocolate and are usually sold at local bakeries and markets. The name literally means “nun’s farts,” which always makes people laugh, but the taste is seriously delicious.",
+        "image": "images/queretaro/pedos.jpg"
+      }
+    ]
+  },
+  "veracruz": {
+    "name": "Veracruz",
+    "info": "Veracruz is a key place in the history of Mexico. It was founded by Hernán Cortés and became the main port of New Spain, a position it still holds today as the country’s most important port. This is where the Olmec culture, considered the mother civilization of Mesoamerica, was born, and the Totonac and Huastec cultures also flourished here. Veracruz saw the construction of Mexico’s first railroad and every year hosts one of the most joyful and colorful carnivals in the country, from February 25 to March 5. My maternal family is from here, specifically Coatzacoalcos, which is also the birthplace of Salma Hayek.",
+    "mapEmbedUrl": "//umap.openstreetmap.fr/en/map/veracruz_1291077?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=false&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=none&captionBar=false&captionMenus=true&homeControl=false",
+    "places": [
+      {
+        "id": "chachalacas",
+        "name": "Chachalacas",
+        "description": "Chachalacas Beach is a unique spot thanks to its sand dunes, which stretch over 550 hectares and create an amazing landscape with the sea in the background. It is perfect for sandboarding, ATV rides, and just enjoying the sun and nature. The water has small waves, ideal for swimming, bodyboarding, or surfing if you are a beginner, but not for extreme surfing. The beach has a calm, family-friendly vibe, and there are small restaurants where you can try typical Veracruz food.",
+        "image": "images/veracruz/chachalacas.jpg"
+      },
+      {
+        "id": "papantla",
+        "name": "Papantla",
+        "description": "Papantla is a place I love for its mix of culture, history, and traditions. It is famous for the Voladores de Papantla, a ritual recognized as Intangible Cultural Heritage of Humanity, where the performers spin from the top of a tall pole to the rhythm of traditional music. Papantla is also known for its vanilla production and its rich artisan crafts. You can’t miss the Teodoro Cano Museum, with murals and sculptures that showcase the region’s history and traditions.",
+        "image": "images/veracruz/papantla.jpg"
+      },
+      {
+        "id": "tajin",
+        "name": "Tajin",
+        "description": "Yes, like the chili powder, Tajín is a place full of history. It is an amazing archaeological site that was one of the most important cities of the Totonac people. It is famous for the Pyramid of the Niches, a unique temple with 365 niches that likely had an astronomical meaning, and for its ball courts, which show the importance of sports and religion in the city. El Tajín was also declared a World Heritage Site by UNESCO for its cultural and architectural value. Walking among its plazas, temples, and murals lets you imagine life centuries ago and feel the richness of Totonac history and tradition.",
+        "image": "images/veracruz/tajin.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "id": "picaditas",
+        "name": "Picaditas",
+        "description": "Picaditas are one of Veracruz’s most delicious street foods and a must-try when visiting the region. They are thick, small corn tortillas fried until crispy, then topped with refried beans, fresh cheese, and a variety of salsas. Sometimes they are also garnished with shredded cabbage, avocado, or cream, making each bite fresh, crunchy, and full of flavor. They are perfect for breakfast and you can find them at markets, street stalls, and small restaurants across Veracruz.",
+        "image": "images/veracruz/picaditas.png"
+      },
+      {
+        "id": "vpambazos",
+        "name": "Pambazos",
+        "description": "Veracruz pambazos are a delicious local specialty that is quite different from the more famous Mexico City version. Instead of being dipped in chili sauce and fried, these pambazos use soft, fluffy bread dusted with flour before baking. They are filled with simple but tasty ingredients like refried beans, chorizo, white cheese, mayonnaise, shredded chicken, ham, lettuce, and adobo chipotle. Veracruz pambazos are enjoyed at any time of day and are especially popular at social gatherings and family events.",
+        "image": "images/veracruz/pambazoV.jpg"
+      },
+      {
+        "id": "molotes",
+        "name": "Molotes",
+        "description": "Plátano molotes are a tasty street food from Veracruz that you have to try. They are made from ripe plantains mashed and mixed with ingredients like cheese, beans, or meat, then formed into small logs and fried until golden and crispy. The result is sweet, savory, and perfectly crunchy on the outside while soft on the inside. Plátano molotes are usually served with a drizzle of cream, salsa, or a sprinkle of cheese, making them irresistible. You can find them at markets, street stalls, and local fairs across Veracruz.",
+        "image": "images/veracruz/molotes.jpg"
+      }
+    ]
+  }  
+}
