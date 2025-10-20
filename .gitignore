@@ -24,7 +24,7 @@ Thumbs.db
 *.tmp
 *.bak
 
-# === Build or output folders (if you start bundling or compiling) ===
+# === Build or output folders ===
 dist/
 build/
 
