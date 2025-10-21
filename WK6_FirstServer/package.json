@@ -1,0 +1,15 @@
+{
+  "name": "wk6_firstserver",
+  "version": "1.0.0",
+  "description": "This is my first server. Connections lab week 6assignment  ",
+  "license": "ISC",
+  "author": "corc",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
