@@ -31,7 +31,7 @@ window.addEventListener('load', () => {
             document.getElementById('coffee-info').innerHTML = ''
             console.log(data.data);
             for(let i=0; i<data.data.length; i++){
-                let string = data.data[i].date + " : " + data.data[i].coffee;
+                let string = data.data[i].coffee;
                 let elt = document.createElement('p');
                 elt.innerHTML = string;
                 document.getElementById('coffee-info').appendChild(elt);

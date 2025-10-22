@@ -18,9 +18,7 @@ let coffeTracker = [];
 //2. add a route on server, that is listening for a post request
 app.post('/noCups', (req, res) => {
     console.log(req.body);
-    let currentDate = Date().toString;
     let obj = {
-        date: currentDate,
         coffee: req.body.number
     }
     // add value to the lowdb database
