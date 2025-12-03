@@ -1,0 +1,29 @@
+body {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+
+}
+
+#page {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#leftDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#middleDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#rightDiv {
+    display: flex;
+    flex-direction: column;
+}

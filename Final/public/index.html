@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- TITLE -->
+    <title>Pending title</title>
+    <!-- STYLESHEET -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- SCRIPTS -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.min.js"></script>
+    <script src="https://unpkg.com/ml5@1.0.1/dist/ml5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+</head>
+
+<body>
+    <main>
+        <!-- HEADER -->
+        <header>
+            <h1>Pending title</h1>
+        </header>
+        <!-- PAGE DIV -->
+        <div id="page">
+            <!-- LEFT DIV -->
+            <div id="leftDiv">
+                <!-- SCALE CONTROL -->
+                <div id="scaleControl">
+                    <label>Musical Scale:</label>
+                    <select id="scaleSelect">
+                        <option value="major">C Major (happy)</option>
+                        <option value="minor">C Minor (sad)</option>
+                        <option value="pentatonic">C Pentatonic (asian)</option>
+                        <option value="blues">C Blues</option>
+                        <option value="dorian">C Dorian (jazz)</option>
+                    </select>
+                </div>
+                <!-- INSTRUMENT SELECT -->
+                <div id="instrumentSelect">
+                    <label>Select Instrument:</label>
+                    <select id="instrumentDropdown">
+                        <option value="piano">Piano</option>
+                        <option value="violin">Violin</option>
+                        <option value="flute">Flute</option>
+                        <option value="drums">Drums</option>
+                    </select>
+                </div>
+                <!-- HOW TO PLAY INSTRUCTIONS -->
+                <div id="info">
+                    <p><strong>How to play:</strong></p>
+                    <p>← Move hand LEFT/RIGHT →: Choose note</p>
+                    <p>↑ Move hand UP/DOWN ↓: Control volume</p>
+                </div>
+            </div>
+
+            <!-- MIDDLE DIV -->
+            <div id="middleDiv">
+                <button id="startBtn">Start</button>
+                <button id="recordBtn">Record</button>
+            </div>
+
+            <!-- RIGHT DIV -->
+            <div id="rightDiv">
+                <!-- Status text -->
+                <div id="status">Loading hand pose model...</div>
+                <!-- P5 script -->
+                <script src="sketch.js"></script>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
