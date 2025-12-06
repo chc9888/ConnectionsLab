@@ -161,7 +161,7 @@ function setupUI() {
 function videoReady() {
     console.log("Video ready");
     handPose.detectStart(video, gotHands);
-    document.getElementById('status').textContent = '👋 Show your hand to play!';
+    document.getElementById('status').textContent = '';
 }
 
 function draw() {
@@ -172,10 +172,17 @@ function draw() {
     image(video, 0, 0, width, height);
     pop();
 
+    let instructions = null;
+
     // Process hand input
     if (hands.length > 0 && audioStarted && selectedInstrument) {
         // Collect active zones for all hands
         let activeZones = [];
+        
+        instructions = 'Press "Stop" to stop the game'; 
+        textSize(14);
+        fill(255, 255, 255, 200);
+        text(instructions, width/2, height-(height/10));
 
         // Process ALL detected hands
         for (let i = 0; i < hands.length; i++) {
@@ -208,14 +215,13 @@ function draw() {
     } else {
         drawZones();
         stopAllNotes();
+        instructions = 'Move your hands infront of the camera';
 
-        if (!selectedInstrument) {
-            document.getElementById('status').textContent = 'Choose an instrument!';
-        } else if (!audioStarted) {
-            document.getElementById('status').textContent = 'Click "Start" to play!';
-        } else {
-            document.getElementById('status').textContent = '👋 Show your hands!';
+        if (!audioStarted) {
+            instructions = 'Click "Start" to play';
         }
+
+        text(instructions, width/2, height/2);
     }
 }
 
