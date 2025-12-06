@@ -1,12 +1,17 @@
 // Socket.IO connection
 let socket;
 
-// Remote players' instruments
+// Remote players
 let remotePlayers = {};
+let isRegistered = false;
+let myUsername = '';
 
+// ml5
 let handPose;
 let video;
 let hands = [];
+
+// sound
 let audioStarted = false;
 let selectedInstrument = 'piano';
 let currentScale = 'major';
@@ -16,8 +21,15 @@ let piano, violin, flute, drums;
 let pianoGain, violinGain, fluteGain, drumsGain;
 let reverb;
 
-// Musical scales (all in octave 4)
-const scales = {
+// Scale 
+let octave;
+let currentNotes = [null, null];
+let currentNote = null;
+let lastZones = [-1, -1];
+let lastOctaves = [-1, -1];
+
+// Musical scales
+let scales = {
     major: ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4'],
     minor: ['C4', 'D4', 'Eb4', 'F4', 'G4', 'Ab4', 'Bb4'],
     pentatonic: ['C4', 'D4', 'E4', 'G4', 'A4', 'C5', 'D5'],
@@ -28,10 +40,6 @@ const scales = {
 // Canvas zones (7 parts for 7 notes)
 const numZones = 7;
 let zoneWidth;
-
-// Currently playing notes (to prevent retriggering)
-let currentNote = null;
-let lastZone = -1;
 
 function preload() {
     handPose = ml5.handPose({ flipped: true });
@@ -164,52 +172,67 @@ function draw() {
     image(video, 0, 0, width, height);
     pop();
 
-    // Draw zone dividers (7 vertical lines for 7 notes)
-    drawZones();
-
     // Process hand input
-    if (hands.length > 0 && audioStarted) {
-        let hand = hands[0];
-        let wrist = hand.keypoints[0];
-        let middleBase = hand.keypoints[9];
+    if (hands.length > 0 && audioStarted && selectedInstrument) {
+        // Collect active zones for all hands
+        let activeZones = [];
 
-        let controlX = (wrist.x + middleBase.x) / 2;
-        let controlY = (wrist.y + middleBase.y) / 2;
+        // Process ALL detected hands
+        for (let i = 0; i < hands.length; i++) {
+            let hand = hands[i];
+            let wrist = hand.keypoints[0];
+            let middleBase = hand.keypoints[9];
 
-        // Determine which zone the hand is in (X position)
-        let zone = getZone(controlX);
+            let controlX = (wrist.x + middleBase.x) / 2;
+            let controlY = (wrist.y + middleBase.y) / 2;
 
-        // Draw zones with active zone highlighted
-        drawZones(zone);
+            let zone = getZone(controlX);
 
-        // Draw wrist indicator
-        drawWrist(controlX, controlY);
+            // Calculate octave
+            let octave = 5 - Math.floor(controlY / (height / 3));
+            octave = constrain(octave, 3, 5);
 
-        // Calculate volume based on Y position
-        let volume = map(controlY, 0, height, 0, -30);
+            // Add to active zones
+            activeZones.push({ zone: zone, octave: octave });
 
-        // Play note based on zone and volume
-        playNote(zone, volume, controlX, controlY);
+            // Draw wrist indicator for each hand (different colors)
+            drawWrist(controlX, controlY, i);
 
-        // Display current note and volume
-        displayInfo(zone, volume);
+            // Play note for this hand
+            playNoteForHand(i, zone, octave, controlX, controlY);
+        }
+
+        // Draw zones with all active zones highlighted
+        drawZones(activeZones);
+
     } else {
-        // No hand detected - draw zones without highlight
         drawZones();
+        stopAllNotes();
 
-        // Stop any playing notes
-        stopCurrentNote();
-        document.getElementById('status').textContent = audioStarted ? '👋 Show your hand to play!' : 'Click "Start" first';
+        if (!selectedInstrument) {
+            document.getElementById('status').textContent = 'Choose an instrument!';
+        } else if (!audioStarted) {
+            document.getElementById('status').textContent = 'Click "Start" to play!';
+        } else {
+            document.getElementById('status').textContent = '👋 Show your hands!';
+        }
     }
 }
 
-function drawZones(activeZone = -1) {
+function drawZones(activeZones = []) {
     stroke(255, 255, 255, 100);
     strokeWeight(2);
 
+    // Notes lines
     for (let i = 1; i < numZones; i++) {
         let x = i * zoneWidth;
         line(x, 0, x, height);
+    }
+
+    // Octave lines
+    for (let i = 1; i < 3; i++) {
+        let y = (height / 3) * i;
+        line(0, y, width, y);
     }
 
     // Draw note labels at top of each zone
@@ -218,19 +241,39 @@ function drawZones(activeZone = -1) {
     textSize(24);
     textStyle(BOLD);
 
-    const notes = scales[currentScale];
+    const baseNotes = scales[currentScale];
     for (let i = 0; i < numZones; i++) {
         let x = i * zoneWidth + zoneWidth / 2;
-        let noteName = notes[i].replace(/[0-9]/g, ''); // Remove octave number
 
-        // Change color if this is the active zone
-        if (i === activeZone) {
-            fill(255, 200, 100); // Bright orange/yellow for active note
-        } else {
-            fill(255, 255, 255, 200); // White for inactive notes
+        // Check if this zone is active for any hand
+        let isActive = false;
+        let activeOctave = null;
+
+        for (let j = 0; j < activeZones.length; j++) {
+            if (activeZones[j].zone === i) {
+                isActive = true;
+                activeOctave = activeZones[j].octave;
+                break;
+            }
         }
 
-        text(noteName, x, 10);
+        // Get note name
+        let baseNote = baseNotes[i];
+        let noteName = baseNote.replace(/[0-9]/g, '');
+
+        // If active, show note+octave, otherwise just note name
+        let displayText = noteName;
+
+        // Change color if active
+        if (isActive) {
+            fill(255, 200, 100); // Orange for active
+            displayText = noteName + activeOctave;
+        } else {
+            fill(255, 255, 255, 200); // White for inactive
+            displayText = noteName
+        }
+
+        text(displayText, x, 10);
     }
 }
 
@@ -255,18 +298,19 @@ function getZone(x) {
     return constrain(floor(x / zoneWidth), 0, numZones - 1);
 }
 
-function playNote(zone, volume, x, y) {
-    const notes = scales[currentScale];
-    const note = notes[zone];
+function playNoteForHand(handIndex, zone, octave, x, y) {
+    const baseNotes = scales[currentScale];
 
-    // Only trigger new note if zone changed
-    if (zone !== lastZone) {
-        stopCurrentNote();
+    let baseNote = baseNotes[zone];
+    let noteName = baseNote.replace(/[0-9]/g, '');
+    let note = noteName + octave;
 
-        // Set volume for current instrument
-        setInstrumentVolume(volume);
+    // Only trigger if zone or octave changed for THIS hand
+    if (zone !== lastZones[handIndex] || octave !== lastOctaves[handIndex]) {
+        // Stop previous note for this hand
+        stopNoteForHand(handIndex);
 
-        // Play note on selected instrument
+        // Play new note
         switch (selectedInstrument) {
             case 'piano':
                 piano.triggerAttack(note);
@@ -278,25 +322,57 @@ function playNote(zone, volume, x, y) {
                 flute.triggerAttack(note);
                 break;
             case 'drums':
-                let drumPitch = note.replace('4', '1');
+                let drumPitch = note.replace(/[0-9]/, '1');
                 drums.triggerAttackRelease(drumPitch, "8n");
                 break;
         }
 
-        currentNote = note;
-        lastZone = zone;
+        currentNotes[handIndex] = note;
+        lastZones[handIndex] = zone;
+        lastOctaves[handIndex] = octave;
 
-        // Emit to server for other players to hear
-        socket.emit('playNote', {
-            instrument: selectedInstrument,
-            note: note,
-            volume: volume,
-            zone: zone
-        });
-    } else {
-        // Same zone - just update volume smoothly
-        setInstrumentVolume(volume);
+        // Emit to other players
+        if (socket) {
+            socket.emit('playNote', {
+                instrument: selectedInstrument,
+                note: note,
+                volume: -10,
+                zone: zone,
+                octave: octave,
+                handIndex: handIndex
+            });
+        }
     }
+}
+
+function stopNoteForHand(handIndex) {
+    let note = currentNotes[handIndex];
+
+    if (note && selectedInstrument !== 'drums') {
+        switch (selectedInstrument) {
+            case 'piano':
+                piano.triggerRelease(note);
+                break;
+            case 'violin':
+                violin.triggerRelease(note);
+                break;
+            case 'flute':
+                flute.triggerRelease(note);
+                break;
+        }
+
+        if (socket && selectedInstrument) {
+            socket.emit('stopNote', {
+                instrument: selectedInstrument,
+                note: note,
+                handIndex: handIndex
+            });
+        }
+
+        currentNotes[handIndex] = null;
+    }
+    lastZones[handIndex] = -1;
+    lastOctaves[handIndex] = -1;
 }
 
 function setInstrumentVolume(volumeDb) {
@@ -333,42 +409,60 @@ function stopCurrentNote() {
                 break;
         }
 
-        // Emit stop to server
-        socket.emit('stopNote', {
-            instrument: selectedInstrument,
-            note: currentNote
-        });
+        if (selectedInstrument) {
+            socket.emit('stopNote', {
+                instrument: selectedInstrument,
+                note: currentNote
+            });
+        }
 
         currentNote = null;
     }
     lastZone = -1;
+    lastOctave = -1;
 }
 
-function displayInfo(zone, volume) {
-    const notes = scales[currentScale];
-    const noteName = notes[zone];
-    const volumePercent = Math.round(map(volume, 0, -30, 100, 0));
+function stopAllNotes() {
+    for (let i = 0; i < 2; i++) {
+        stopNoteForHand(i);
+    }
+}
+
+function displayInfo(zone, octave) {
+    const baseNotes = scales[currentScale];
+    let baseNote = baseNotes[zone];
+    let noteName = baseNote.replace(/[0-9]/g, '');
+    let fullNote = noteName + octave;
 
     fill(255);
     stroke(0);
     strokeWeight(3);
     textAlign(LEFT, BOTTOM);
     textSize(18);
-    text(`Note: ${noteName}  |  Volume: ${volumePercent}%`, 10, height - 10);
+    text(`Note: ${fullNote}  |  Octave: ${octave}`, 10, height - 10);
 }
 
 function gotHands(results) {
+    // Store previous hand count
+    let previousHandCount = hands.length;
     hands = results;
 
-    // If no hands detected, stop any playing notes
+    // If hand count decreased, stop notes for missing hands
+    if (results.length < previousHandCount) {
+        for (let i = results.length; i < previousHandCount; i++) {
+            stopNoteForHand(i);
+        }
+    }
+
+    // If no hands, stop all
     if (results.length === 0) {
-        stopCurrentNote();
+        stopAllNotes();
     }
 }
 
 function playRemoteNote(data) {
-    // Play note from remote user on their instrument
-    const linearVolume = Math.pow(10, data.volume / 20);
+    // Use fixed volume for remote notes
+    const linearVolume = 0.5; // Medium volume
 
     switch (data.instrument) {
         case 'piano':
@@ -385,12 +479,11 @@ function playRemoteNote(data) {
             break;
         case 'drums':
             drumsGain.gain.rampTo(linearVolume * 0.9, 0.05);
-            let drumPitch = data.note.replace('4', '1');
+            let drumPitch = data.note.replace(/[0-9]/, '1');
             drums.triggerAttackRelease(drumPitch, "8n");
             break;
     }
 
-    // Store reference for cleanup
     if (!remotePlayers[data.userId]) {
         remotePlayers[data.userId] = {};
     }
