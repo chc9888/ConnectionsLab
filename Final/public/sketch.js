@@ -77,8 +77,11 @@ function setupAudio() {
 function setupSocket() {
     socket = io();
 
-    // Assign your own color (orange) immediately
-    userColors['self'] = [255, 200, 100]; // Orange for you
+    // Get your own socket ID and assign orange color
+    socket.on('connect', () => {
+        console.log('My socket ID:', socket.id);
+        userColors[socket.id] = [255, 200, 100]; // Orange for you
+    });
 
     // Receive current state when connecting
     socket.on('currentState', (data) => {
@@ -95,10 +98,11 @@ function setupSocket() {
         document.getElementById('scaleSelect').value = currentScale;
 
         // Assign colors to existing users
-        let colorIndex = 1; // Start at 1 (0 is for self)
+        let colorIndex = 1; // Start at 1 (you are 0)
         for (let userId in data.users) {
-            if (!userColors[userId]) {
+            if (userId !== socket.id && !userColors[userId]) {
                 userColors[userId] = assignUserColor(colorIndex);
+                console.log(`Assigned color ${colorIndex} to user ${userId}`);
                 colorIndex++;
             }
         }
@@ -118,19 +122,18 @@ function setupSocket() {
         // Assign colors to new users
         let colorIndex = 1;
         for (let userId in data.users) {
-            if (!userColors[userId]) {
+            if (userId !== socket.id && !userColors[userId]) {
                 userColors[userId] = assignUserColor(colorIndex);
-                colorIndex++;
-            } else {
+                console.log(`Assigned color ${colorIndex} to new user ${userId}`);
+            }
+            if (userId !== socket.id) {
                 colorIndex++;
             }
         }
     });
 
-    // Remote player plays note - with hand position
-    socket.on('remotePlayNote', (data) => {
-        playRemoteNote(data);
-
+    // NEW: Receive hand position updates (separate from note playing)
+    socket.on('handUpdate', (data) => {
         // Store remote hand position
         if (!remoteHands[data.userId]) {
             remoteHands[data.userId] = {};
@@ -144,15 +147,24 @@ function setupSocket() {
 
         // Assign color to user if not assigned yet
         if (!userColors[data.userId]) {
-            let existingUsersCount = Object.keys(userColors).length;
-            userColors[data.userId] = assignUserColor(existingUsersCount);
+            let colorIndex = Object.keys(userColors).filter(k => k !== socket.id).length + 1;
+            userColors[data.userId] = assignUserColor(colorIndex);
+            console.log(`Assigned color ${colorIndex} to user ${data.userId} (from handUpdate)`);
         }
+    });
+
+    // Remote player plays note - with hand position
+    socket.on('remotePlayNote', (data) => {
+        playRemoteNote(data);
     });
 
     // Remote player stops note
     socket.on('remoteStopNote', (data) => {
         stopRemoteNote(data);
+    });
 
+    // NEW: Remote hand removed
+    socket.on('handRemoved', (data) => {
         // Remove remote hand position
         if (remoteHands[data.userId] && remoteHands[data.userId][data.handIndex]) {
             delete remoteHands[data.userId][data.handIndex];
@@ -237,49 +249,66 @@ function draw() {
 
     // Process hand input
     if (hands.length > 0 && audioStarted && !isListener) {
-    // Collect active zones for all hands
-    let activeZones = [];
-    
-    instructions = 'Press "Stop" to stop playing'; 
-    textAlign(CENTER, CENTER);
-    textSize(14);
-    fill(255, 255, 255, 200);
-    noStroke();
-    text(instructions, width/2, height-(height/10));
+        // Collect active zones for all hands
+        let activeZones = [];
+        
+        instructions = 'Press "Stop" to stop playing'; 
+        textAlign(CENTER, CENTER);
+        textSize(14);
+        fill(255, 255, 255, 200);
+        noStroke();
+        text(instructions, width/2, height-(height/10));
 
-    // Process ALL detected hands
-    for (let i = 0; i < hands.length; i++) {
-        let hand = hands[i];
-        let wrist = hand.keypoints[0];
-        let middleBase = hand.keypoints[9];
+        // Process ALL detected hands
+        for (let i = 0; i < hands.length; i++) {
+            let hand = hands[i];
+            let wrist = hand.keypoints[0];
+            let middleBase = hand.keypoints[9];
 
-        let controlX = (wrist.x + middleBase.x) / 2;
-        let controlY = (wrist.y + middleBase.y) / 2;
+            let controlX = (wrist.x + middleBase.x) / 2;
+            let controlY = (wrist.y + middleBase.y) / 2;
 
-        let zone = getZone(controlX);
+            let zone = getZone(controlX);
 
-        // Calculate octave
-        let octave = 5 - Math.floor(controlY / (height / 3));
-        octave = constrain(octave, 3, 5);
+            // Calculate octave
+            let octave = 5 - Math.floor(controlY / (height / 3));
+            octave = constrain(octave, 3, 5);
 
-        // Add to active zones
-        activeZones.push({ zone: zone, octave: octave });
+            // Add to active zones
+            activeZones.push({ zone: zone, octave: octave });
 
-        // Draw wrist indicator with your color (orange)
-        drawWrist(controlX, controlY, userColors['self']);
+            // Draw wrist indicator with your color (orange)
+            let myColor = userColors[socket.id] || [255, 200, 100];
+            drawWrist(controlX, controlY, myColor);
 
-        // Play note for this hand
-        playNoteForHand(i, zone, octave, controlX, controlY);
-    }
+            // Play note for this hand
+            playNoteForHand(i, zone, octave, controlX, controlY);
+            
+            // NEW: Send hand position update every frame for real-time visualization
+            if (socket && frameCount % 2 === 0) { // Send every 2 frames to reduce load
+                socket.emit('handUpdate', {
+                    handIndex: i,
+                    handX: controlX,
+                    handY: controlY,
+                    zone: zone,
+                    octave: octave
+                });
+            }
+        }
 
-    // Draw zones with all active zones highlighted
-    drawZones(activeZones);
+        // Draw zones with all active zones highlighted
+        drawZones(activeZones);
 
-} else {
+    } else {
         drawZones();
 
         if (!isListener) {
             stopAllNotes();
+            
+            // NEW: Notify server that hands are removed
+            if (socket && hands.length === 0) {
+                socket.emit('handsRemoved');
+            }
         }
 
         // Instructions
