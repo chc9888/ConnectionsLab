@@ -1,0 +1,123 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Caveat", cursive;
+    overflow: hidden;
+    text-align: center;
+}
+
+.caveat {
+    font-family: "Caveat", cursive;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#entry-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    color: aliceblue;
+    height: 100vh;
+    width: 100vw;
+}
+
+h1 {
+    padding: 20px;
+}
+
+#entry-screen.hidden {
+    display: none;
+}
+
+#enter-btn {
+    padding: 20px 40px;
+    font-size: 24px;
+    cursor: pointer;
+    background: black;
+    font-family: "Caveat", cursive;
+    color: aliceblue;
+    border: 2px solid aliceblue;
+}
+
+#enter-btn:hover {
+    border: 0px;
+}
+
+#mind-screen {
+    display: none;
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(143, 143, 143);
+    color: aliceblue;
+    background-image: url('image.jpg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: normal;
+}
+
+#mind-screen.active {
+    display: block;
+}
+
+.quote-container {
+    position: absolute;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+}
+
+.quote-container.revealed {
+    width: auto;
+    height: auto;
+}
+
+.scribble {
+    display: block;
+    user-select: none;
+    width: 100px;
+    height: 100px;
+}
+
+.quote-text {
+    display: none !important;
+    font-size: 30px;
+    max-width: 300px;
+    text-align: center;
+}
+
+.quote-container.revealed .scribble {
+    display: none;
+}
+
+.quote-container.revealed .quote-text {
+    display: block !important;
+}
+
+#restart-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 20px;
+    font-family: "Caveat", cursive;
+    background: none;
+    border: 2px solid black;
+}
+
+#restart-btn:hover {
+    border: 0px;
+}
