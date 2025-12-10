@@ -77,6 +77,9 @@ function setupAudio() {
 function setupSocket() {
     socket = io();
 
+    // Assign your own color (orange) immediately
+    userColors['self'] = [255, 200, 100]; // Orange for you
+
     // Receive current state when connecting
     socket.on('currentState', (data) => {
         console.log('Current state received:', data);
@@ -85,13 +88,20 @@ function setupSocket() {
         if (data.isFull) {
             isListener = true;
             document.getElementById('status').textContent = 'Orchestra is full - You are listening only';
-            // Disable instrument selection
-            document.getElementById('instrumentDropdown').disabled = true;
         }
 
         // Set global scale
         currentScale = data.currentScale;
         document.getElementById('scaleSelect').value = currentScale;
+
+        // Assign colors to existing users
+        let colorIndex = 1; // Start at 1 (0 is for self)
+        for (let userId in data.users) {
+            if (!userColors[userId]) {
+                userColors[userId] = assignUserColor(colorIndex);
+                colorIndex++;
+            }
+        }
     });
 
     // Global scale changed by another user
@@ -104,6 +114,17 @@ function setupSocket() {
     // Update users list
     socket.on('updateUsers', (data) => {
         console.log('Users updated:', data);
+
+        // Assign colors to new users
+        let colorIndex = 1;
+        for (let userId in data.users) {
+            if (!userColors[userId]) {
+                userColors[userId] = assignUserColor(colorIndex);
+                colorIndex++;
+            } else {
+                colorIndex++;
+            }
+        }
     });
 
     // Remote player plays note - with hand position
@@ -121,9 +142,10 @@ function setupSocket() {
             octave: data.octave
         };
 
-        // Assign color to user if not assigned
+        // Assign color to user if not assigned yet
         if (!userColors[data.userId]) {
-            userColors[data.userId] = assignUserColor(Object.keys(userColors).length);
+            let existingUsersCount = Object.keys(userColors).length;
+            userColors[data.userId] = assignUserColor(existingUsersCount);
         }
     });
 
@@ -145,11 +167,11 @@ function setupSocket() {
 
 function assignUserColor(index) {
     const colors = [
-        [255, 200, 100], // Orange (current user)
-        [100, 200, 255], // Blue
-        [100, 255, 150], // Green
-        [255, 100, 200], // Pink
-        [255, 255, 100]  // Yellow
+        [255, 200, 100], // Orange (index 0 - self)
+        [100, 200, 255], // Blue (index 1)
+        [100, 255, 150], // Green (index 2)
+        [255, 100, 200], // Pink (index 3)
+        [200, 100, 255]  // Purple (index 4)
     ];
     return colors[index % colors.length];
 }
@@ -215,45 +237,45 @@ function draw() {
 
     // Process hand input
     if (hands.length > 0 && audioStarted && !isListener) {
-        // Collect active zones for all hands
-        let activeZones = [];
+    // Collect active zones for all hands
+    let activeZones = [];
+    
+    instructions = 'Press "Stop" to stop playing'; 
+    textAlign(CENTER, CENTER);
+    textSize(14);
+    fill(255, 255, 255, 200);
+    noStroke();
+    text(instructions, width/2, height-(height/10));
 
-        instructions = 'Press "Stop" to stop playing';
-        textAlign(CENTER, CENTER);
-        textSize(14);
-        fill(255, 255, 255, 200);
-        noStroke();
-        text(instructions, width / 2, height - (height / 10));
+    // Process ALL detected hands
+    for (let i = 0; i < hands.length; i++) {
+        let hand = hands[i];
+        let wrist = hand.keypoints[0];
+        let middleBase = hand.keypoints[9];
 
-        // Process ALL detected hands
-        for (let i = 0; i < hands.length; i++) {
-            let hand = hands[i];
-            let wrist = hand.keypoints[0];
-            let middleBase = hand.keypoints[9];
+        let controlX = (wrist.x + middleBase.x) / 2;
+        let controlY = (wrist.y + middleBase.y) / 2;
 
-            let controlX = (wrist.x + middleBase.x) / 2;
-            let controlY = (wrist.y + middleBase.y) / 2;
+        let zone = getZone(controlX);
 
-            let zone = getZone(controlX);
+        // Calculate octave
+        let octave = 5 - Math.floor(controlY / (height / 3));
+        octave = constrain(octave, 3, 5);
 
-            // Calculate octave
-            let octave = 5 - Math.floor(controlY / (height / 3));
-            octave = constrain(octave, 3, 5);
+        // Add to active zones
+        activeZones.push({ zone: zone, octave: octave });
 
-            // Add to active zones
-            activeZones.push({ zone: zone, octave: octave });
+        // Draw wrist indicator with your color (orange)
+        drawWrist(controlX, controlY, userColors['self']);
 
-            // Draw wrist indicator for each hand (orange for local user)
-            drawWrist(controlX, controlY, [255, 200, 100]);
+        // Play note for this hand
+        playNoteForHand(i, zone, octave, controlX, controlY);
+    }
 
-            // Play note for this hand
-            playNoteForHand(i, zone, octave, controlX, controlY);
-        }
+    // Draw zones with all active zones highlighted
+    drawZones(activeZones);
 
-        // Draw zones with all active zones highlighted
-        drawZones(activeZones);
-
-    } else {
+} else {
         drawZones();
 
         if (!isListener) {
