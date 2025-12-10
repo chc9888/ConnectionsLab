@@ -3,8 +3,9 @@ let socket;
 
 // Remote players
 let remotePlayers = {};
-let isRegistered = false;
-let myUsername = '';
+let remoteHands = {};
+let isListener = false;
+let userColors = {};
 
 // ml5
 let handPose;
@@ -71,65 +72,102 @@ function setupAudio() {
         envelope: { attack: 0.01, decay: 0.4, sustain: 0.1, release: 1.0 }
     }).connect(pianoGain);
     pianoGain.connect(reverb);
-
-    // VIOLIN - Smooth, sustained string sound
-    violinGain = new Tone.Gain(0.6).toDestination();
-    violin = new Tone.PolySynth(Tone.Synth, {
-        oscillator: { type: "sawtooth" },
-        envelope: {
-            attack: 0.08,
-            decay: 0.2,
-            sustain: 0.7,
-            release: 1.5
-        }
-    }).connect(violinGain);
-    violinGain.connect(reverb);
-
-    // FLUTE - Airy, soft woodwind sound
-    fluteGain = new Tone.Gain(0.5).toDestination();
-    flute = new Tone.PolySynth(Tone.Synth, {
-        oscillator: { type: "sine" },
-        envelope: {
-            attack: 0.02,
-            decay: 0.1,
-            sustain: 0.5,
-            release: 0.8
-        }
-    }).connect(fluteGain);
-    fluteGain.connect(reverb);
-
-    // DRUMS - Percussive sounds
-    drumsGain = new Tone.Gain(0.9).toDestination();
-    drums = new Tone.MembraneSynth({
-        pitchDecay: 0.05,
-        octaves: 10,
-        oscillator: { type: "sine" },
-        envelope: { attack: 0.001, decay: 0.4, sustain: 0.01, release: 1.4 }
-    }).connect(drumsGain);
 }
 
 function setupSocket() {
-    socket = io(); // Connect to server
+    socket = io();
 
-    // Listen for remote players playing notes
+    // Receive current state when connecting
+    socket.on('currentState', (data) => {
+        console.log('Current state received:', data);
+
+        // Check if orchestra is full
+        if (data.isFull) {
+            isListener = true;
+            document.getElementById('status').textContent = 'Orchestra is full - You are listening only';
+            // Disable instrument selection
+            document.getElementById('instrumentDropdown').disabled = true;
+        }
+
+        // Set global scale
+        currentScale = data.currentScale;
+        document.getElementById('scaleSelect').value = currentScale;
+    });
+
+    // Global scale changed by another user
+    socket.on('scaleChanged', (scale) => {
+        currentScale = scale;
+        document.getElementById('scaleSelect').value = scale;
+        console.log('Scale changed to:', scale);
+    });
+
+    // Update users list
+    socket.on('updateUsers', (data) => {
+        console.log('Users updated:', data);
+    });
+
+    // Remote player plays note - with hand position
     socket.on('remotePlayNote', (data) => {
         playRemoteNote(data);
+
+        // Store remote hand position
+        if (!remoteHands[data.userId]) {
+            remoteHands[data.userId] = {};
+        }
+        remoteHands[data.userId][data.handIndex] = {
+            x: data.handX,
+            y: data.handY,
+            zone: data.zone,
+            octave: data.octave
+        };
+
+        // Assign color to user if not assigned
+        if (!userColors[data.userId]) {
+            userColors[data.userId] = assignUserColor(Object.keys(userColors).length);
+        }
     });
 
-    // Listen for remote players stopping notes
+    // Remote player stops note
     socket.on('remoteStopNote', (data) => {
         stopRemoteNote(data);
+
+        // Remove remote hand position
+        if (remoteHands[data.userId] && remoteHands[data.userId][data.handIndex]) {
+            delete remoteHands[data.userId][data.handIndex];
+        }
     });
 
-    // Update connected users list
-    socket.on('updateUsers', (users) => {
-        console.log('Connected users:', users);
-        // You can display this in the UI if you want
+    // Error handling
+    socket.on('error', (data) => {
+        alert(data.message);
     });
 }
 
-function setupUI() {
+function assignUserColor(index) {
+    const colors = [
+        [255, 200, 100], // Orange (current user)
+        [100, 200, 255], // Blue
+        [100, 255, 150], // Green
+        [255, 100, 200], // Pink
+        [255, 255, 100]  // Yellow
+    ];
+    return colors[index % colors.length];
+}
 
+function drawRemoteHands() {
+    // Draw all remote users' hands
+    for (let userId in remoteHands) {
+        let userHands = remoteHands[userId];
+        let color = userColors[userId] || [200, 200, 200];
+
+        for (let handIndex in userHands) {
+            let handData = userHands[handIndex];
+            drawWrist(handData.x, handData.y, color);
+        }
+    }
+}
+
+function setupUI() {
     // Start/Stop button
     document.getElementById('startBtn').addEventListener('click', async () => {
         if (!audioStarted) {
@@ -137,24 +175,22 @@ function setupUI() {
             audioStarted = true;
             document.getElementById('startBtn').textContent = 'Stop';
         } else {
-            stopCurrentNote();
+            stopAllNotes();
             audioStarted = false;
             document.getElementById('startBtn').textContent = 'Start';
         }
     });
 
-    // Scale selection
+    // Scale selection - emit to server
     document.getElementById('scaleSelect').addEventListener('change', (e) => {
-        currentScale = e.target.value;
-    });
-
-    // Instrument selection dropdown
-    document.getElementById('instrumentDropdown').addEventListener('change', (e) => {
-        selectedInstrument = e.target.value;
-        stopCurrentNote();
-
-        // Notify server of instrument selection
-        socket.emit('selectInstrument', selectedInstrument);
+        if (!isListener) {
+            currentScale = e.target.value;
+            socket.emit('changeScale', currentScale);
+        } else {
+            // Revert if listener
+            e.target.value = currentScale;
+            alert('Only players can change the scale!');
+        }
     });
 }
 
@@ -174,15 +210,20 @@ function draw() {
 
     let instructions = null;
 
+    // Draw remote users' hands FIRST (so they appear behind local hands)
+    drawRemoteHands();
+
     // Process hand input
-    if (hands.length > 0 && audioStarted && selectedInstrument) {
+    if (hands.length > 0 && audioStarted && !isListener) {
         // Collect active zones for all hands
         let activeZones = [];
-        
-        instructions = 'Press "Stop" to stop the game'; 
+
+        instructions = 'Press "Stop" to stop playing';
+        textAlign(CENTER, CENTER);
         textSize(14);
         fill(255, 255, 255, 200);
-        text(instructions, width/2, height-(height/10));
+        noStroke();
+        text(instructions, width / 2, height - (height / 10));
 
         // Process ALL detected hands
         for (let i = 0; i < hands.length; i++) {
@@ -202,8 +243,8 @@ function draw() {
             // Add to active zones
             activeZones.push({ zone: zone, octave: octave });
 
-            // Draw wrist indicator for each hand (different colors)
-            drawWrist(controlX, controlY, i);
+            // Draw wrist indicator for each hand (orange for local user)
+            drawWrist(controlX, controlY, [255, 200, 100]);
 
             // Play note for this hand
             playNoteForHand(i, zone, octave, controlX, controlY);
@@ -214,14 +255,26 @@ function draw() {
 
     } else {
         drawZones();
-        stopAllNotes();
-        instructions = 'Move your hands infront of the camera';
 
-        if (!audioStarted) {
-            instructions = 'Click "Start" to play';
+        if (!isListener) {
+            stopAllNotes();
         }
 
-        text(instructions, width/2, height/2);
+        // Instructions
+        textAlign(CENTER, CENTER);
+        textSize(18);
+        fill(255, 255, 255, 200);
+        noStroke();
+
+        if (isListener) {
+            instructions = 'The orchestra is full.\nYou can stay to listen and watch!';
+        } else if (!audioStarted) {
+            instructions = 'Click "Start" to play';
+        } else {
+            instructions = 'Move your hands in front of the camera';
+        }
+
+        text(instructions, width / 2, height / 2);
     }
 }
 
@@ -283,18 +336,18 @@ function drawZones(activeZones = []) {
     }
 }
 
-function drawWrist(x, y) {
+function drawWrist(x, y, color = [255, 200, 100]) {
     // Glow effect
     noStroke();
-    fill(255, 200, 100, 80);
+    fill(color[0], color[1], color[2], 80);
     circle(x, y, 50);
-    fill(255, 200, 100, 150);
+    fill(color[0], color[1], color[2], 150);
     circle(x, y, 30);
     fill(255, 255, 255);
     circle(x, y, 15);
 
     // Crosshair
-    stroke(255, 255, 255, 200);
+    stroke(color[0], color[1], color[2], 200);
     strokeWeight(2);
     line(x - 20, y, x + 20, y);
     line(x, y - 20, x, y + 20);
@@ -337,7 +390,7 @@ function playNoteForHand(handIndex, zone, octave, x, y) {
         lastZones[handIndex] = zone;
         lastOctaves[handIndex] = octave;
 
-        // Emit to other players
+        // Emit to other players WITH hand position
         if (socket) {
             socket.emit('playNote', {
                 instrument: selectedInstrument,
@@ -345,7 +398,9 @@ function playNoteForHand(handIndex, zone, octave, x, y) {
                 volume: -10,
                 zone: zone,
                 octave: octave,
-                handIndex: handIndex
+                handIndex: handIndex,
+                handX: x,  // NEW
+                handY: y   // NEW
             });
         }
     }
