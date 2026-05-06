@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Verdict — Room Raiders</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="page-verdict">
+
+  <div class="verdict-container" id="verdict-container">
+
+    <div class="verdict-question">
+      <p class="verdict-label">the moment of truth</p>
+      <h1 class="verdict-title">would you<br>date me?</h1>
+      <p class="verdict-sub">based on a deeply scientific analysis of my belongings.</p>
+
+      <div class="verdict-buttons">
+        <button class="btn-verdict btn-yes" id="btn-yes">yeah, definitely</button>
+        <button class="btn-verdict btn-no" id="btn-no">absolutely not</button>
+      </div>
+    </div>
+
+    <!-- Result screen (hidden until button clicked) -->
+    <div class="verdict-result hidden" id="verdict-result">
+      <p class="result-emoji" id="result-emoji"></p>
+      <h2 class="result-title" id="result-title"></h2>
+      <p class="result-msg" id="result-msg"></p>
+      <a href="index.html" class="btn-small">start over</a>
+    </div>
+
+  </div>
+
+  <script src="js/verdict.js"></script>
+</body>
+</html>

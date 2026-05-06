@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Cabinet — Room Raiders</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Three.js via CDN -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body class="page-cabinet">
+
+  <header class="cabinet-header">
+    <span class="header-label">room raiders — cabinet of curiosities</span>
+    <span class="progress-label" id="progress-label">0 / 6 inspected</span>
+  </header>
+
+  <!-- Object grid -->
+  <main class="cabinet-grid" id="cabinet-grid">
+
+    <!-- Each card — duplicate this block for each object.
+         Set data-id to a unique slug matching your GLB filename (no extension).
+         Example: data-id="guitar" will look for models/guitar.glb -->
+
+    <div class="object-card" data-id="object-1" data-name="Object 1" data-description="Write your description here. What is this thing? Why do you have it? What does it say about you?">
+      <div class="card-viewer" id="viewer-object-1"></div>
+      <div class="card-info">
+        <h2 class="card-name">Object 1</h2>
+        <p class="card-desc">Write your description here. What is this thing? Why do you have it? What does it say about you?</p>
+        <span class="card-badge">not inspected</span>
+      </div>
+    </div>
+
+    <div class="object-card" data-id="object-2" data-name="Object 2" data-description="Write your description here.">
+      <div class="card-viewer" id="viewer-object-2"></div>
+      <div class="card-info">
+        <h2 class="card-name">Object 2</h2>
+        <p class="card-desc">Write your description here.</p>
+        <span class="card-badge">not inspected</span>
+      </div>
+    </div>
+
+    <div class="object-card" data-id="object-3" data-name="Object 3" data-description="Write your description here.">
+      <div class="card-viewer" id="viewer-object-3"></div>
+      <div class="card-info">
+        <h2 class="card-name">Object 3</h2>
+        <p class="card-desc">Write your description here.</p>
+        <span class="card-badge">not inspected</span>
+      </div>
+    </div>
+
+    <div class="object-card" data-id="object-4" data-name="Object 4" data-description="Write your description here.">
+      <div class="card-viewer" id="viewer-object-4"></div>
+      <div class="card-info">
+        <h2 class="card-name">Object 4</h2>
+        <p class="card-desc">Write your description here.</p>
+        <span class="card-badge">not inspected</span>
+      </div>
+    </div>
+
+    <div class="object-card" data-id="object-5" data-name="Object 5" data-description="Write your description here.">
+      <div class="card-viewer" id="viewer-object-5"></div>
+      <div class="card-info">
+        <h2 class="card-name">Object 5</h2>
+        <p class="card-desc">Write your description here.</p>
+        <span class="card-badge">not inspected</span>
+      </div>
+    </div>
+
+    <div class="object-card" data-id="object-6" data-name="Object 6" data-description="Write your description here.">
+      <div class="card-viewer" id="viewer-object-6"></div>
+      <div class="card-info">
+        <h2 class="card-name">Object 6</h2>
+        <p class="card-desc">Write your description here.</p>
+        <span class="card-badge">not inspected</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- CTA that appears once all objects inspected -->
+  <div class="verdict-cta hidden" id="verdict-cta">
+    <p>you've seen everything. now the real question…</p>
+    <a href="verdict.html" class="btn-enter">make your verdict</a>
+  </div>
+
+  <script type="module" src="js/cabinet.js"></script>
+</body>
+</html>
