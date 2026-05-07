@@ -6,7 +6,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // ─── Config ──────────────────────────────────────────────
-// Total number of objects the user must inspect before the verdict CTA appears.
 const TOTAL_OBJECTS = 6;
 
 // ─── State ───────────────────────────────────────────────
@@ -21,12 +20,14 @@ cards.forEach(card => {
   const id = card.dataset.id;
   const viewerEl = document.getElementById(`viewer-${id}`);
 
-  // Set up Three.js scene for this card
-  setupViewer(viewerEl, id);
+  if (!viewerEl) {
+    console.warn(`No viewer element found for data-id="${id}". Make sure id="viewer-${id}" exists.`);
+    return;
+  }
 
-  // Mark as inspected when user interacts with the card viewer (mousedown)
+  setupViewer(viewerEl, id, card);
+
   viewerEl.addEventListener('mousedown', () => markInspected(card, id));
-  // Also on touch
   viewerEl.addEventListener('touchstart', () => markInspected(card, id), { passive: true });
 });
 
@@ -47,7 +48,7 @@ function markInspected(card, id) {
 }
 
 // ─── Three.js viewer setup ───────────────────────────────
-function setupViewer(container, modelId) {
+function setupViewer(container, modelId, card) {
   const width = container.clientWidth || 280;
   const height = container.clientHeight || 240;
 
@@ -56,6 +57,8 @@ function setupViewer(container, modelId) {
   renderer.setSize(width, height);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMappingExposure = 1.8;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
   container.appendChild(renderer.domElement);
 
   // Scene
@@ -65,15 +68,23 @@ function setupViewer(container, modelId) {
   const camera = new THREE.PerspectiveCamera(45, width / height, 0.01, 1000);
   camera.position.set(0, 0.5, 2);
 
-  // Lights
-  const ambient = new THREE.AmbientLight(0xffffff, 1.2);
+  // ─── Lights (bright, even coverage) ──────────────────
+  const ambient = new THREE.AmbientLight(0xffffff, 3.0);
   scene.add(ambient);
 
-  const dirLight = new THREE.DirectionalLight(0xffffff, 2);
-  dirLight.position.set(1, 2, 3);
-  scene.add(dirLight);
+  const frontLight = new THREE.DirectionalLight(0xffffff, 3.0);
+  frontLight.position.set(0, 2, 4);
+  scene.add(frontLight);
 
-  // OrbitControls (drag to rotate)
+  const fillLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  fillLight.position.set(-3, 1, 1);
+  scene.add(fillLight);
+
+  const backLight = new THREE.DirectionalLight(0xffffff, 1.0);
+  backLight.position.set(0, -2, -3);
+  scene.add(backLight);
+
+  // OrbitControls
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
@@ -81,15 +92,22 @@ function setupViewer(container, modelId) {
   controls.autoRotate = true;
   controls.autoRotateSpeed = 1.5;
 
-  // Load GLB
-  // File expected at: models/<modelId>.glb
+  // ─── Load GLB ────────────────────────────────────────
   const loader = new GLTFLoader();
   loader.load(
     `models/${modelId}.glb`,
     (gltf) => {
       const model = gltf.scene;
 
-      // Auto-center and auto-scale the model to fit the viewer
+      // 1. Apply rotation FIRST (before bounding box calculation)
+      const rotX = parseFloat(card.dataset.rotationX || 0);
+      const rotY = parseFloat(card.dataset.rotationY || 0);
+      const rotZ = parseFloat(card.dataset.rotationZ || 0);
+      model.rotation.x = rotX * (Math.PI / 180);
+      model.rotation.y = rotY * (Math.PI / 180);
+      model.rotation.z = rotZ * (Math.PI / 180);
+
+      // 2. Now calculate bounding box on the already-rotated model
       const box = new THREE.Box3().setFromObject(model);
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
@@ -101,18 +119,16 @@ function setupViewer(container, modelId) {
 
       scene.add(model);
 
-      // Clear the loading placeholder text
-      container.style.setProperty('--loading-text', '""');
+      // Hide "loading model…" text
+      container.classList.add('loaded');
     },
-    (xhr) => {
-      // Progress — optional
-    },
+    undefined,
     (err) => {
-      console.warn(`Could not load models/${modelId}.glb — using placeholder.`, err);
-      // Show a simple placeholder cube if model is missing
+      console.warn(`Could not load models/${modelId}.glb`, err);
       const geo = new THREE.BoxGeometry(0.8, 0.8, 0.8);
       const mat = new THREE.MeshStandardMaterial({ color: 0xcccccc, wireframe: true });
       scene.add(new THREE.Mesh(geo, mat));
+      container.classList.add('loaded');
     }
   );
 
@@ -124,7 +140,7 @@ function setupViewer(container, modelId) {
   }
   animate();
 
-  // Resize observer — handles window resize or layout shifts
+  // Resize observer
   const ro = new ResizeObserver(() => {
     const w = container.clientWidth;
     const h = container.clientHeight;

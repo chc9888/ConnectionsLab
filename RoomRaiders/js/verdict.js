@@ -13,36 +13,21 @@ const resultMsg = document.getElementById('result-msg');
 const yesResponses = [
   {
     emoji: '😌',
-    title: 'i knew it.',
-    msg: "you clearly have excellent taste. also thank you for not judging the mystery item in the corner.",
-  },
-  {
-    emoji: '🫶',
-    title: 'valid choice.',
-    msg: "the objects spoke for themselves. i rest my case.",
-  },
-  {
-    emoji: '🥹',
-    title: 'wow okay.',
-    msg: "you just agreed to date someone based on their stuff. that's kind of iconic of you.",
+    title: 'I knew it.',
+    msg: "You clearly have excellent taste.",
   },
 ];
 
 const noResponses = [
   {
     emoji: '💀',
-    title: 'devastating.',
-    msg: "the objects and i will remember this. good day.",
+    title: 'Devastating.',
+    msg: "My stuff and i will remember this. Good day.",
   },
   {
     emoji: '😮‍💨',
-    title: 'fair enough.',
-    msg: "i respect it. my stuff is a lot. we're probably not compatible anyway.",
-  },
-  {
-    emoji: '🫠',
-    title: 'no?? really??',
-    msg: "so the [object name here] didn't win you over? that's wild. truly wild.",
+    title: 'Fair enough.',
+    msg: "I respect it. We're probably not compatible anyway.",
   },
 ];
 

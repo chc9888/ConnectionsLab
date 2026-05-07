@@ -123,7 +123,7 @@ a {
 }
 
 .object-card.inspected {
-  border-color: #111;
+  border-color: #8A2BE2;
 }
 
 /* 3D viewer container — Three.js canvas goes here */
@@ -145,6 +145,11 @@ a {
   font-size: 0.75rem;
   opacity: 0.4;
   pointer-events: none;
+}
+
+/* Hide placeholder once model is loaded */
+.card-viewer.loaded::before {
+  display: none;
 }
 
 .card-info {
@@ -175,8 +180,8 @@ a {
 }
 
 .object-card.inspected .card-badge {
-  border-color: #111;
-  color: #111;
+  border-color: #006400;
+  color: #006400;
 }
 
 /* ---------- Verdict CTA (bottom of cabinet) ---------- */
